@@ -6,20 +6,12 @@ CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44800
-RECORD_SECONDS = 1
+RECORD_SECONDS = 2
 WAVE_OUTPUT_FILENAME = "real_time_audio.wav"
 
 for i in range(1, 16):
 
-    # down
-    # down
-    # right
-    # left
-    # spin
-    # spin 
-    # left
-
-    WAVE_OUTPUT_FILENAME = "blanco" + str(i) + ".wav"
+    WAVE_OUTPUT_FILENAME = "abajo" + str(i) + ".wav"
 
     audio = pyaudio.PyAudio()
 

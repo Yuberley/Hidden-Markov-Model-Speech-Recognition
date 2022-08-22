@@ -15,7 +15,7 @@ CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
-RECORD_SECONDS = 1
+RECORD_SECONDS = 2
 WAVE_OUTPUT_FILENAME = "real_time_audio.wav"
 
 
@@ -113,81 +113,36 @@ if __name__=='__main__':
         ]
     
 
-    # while True:
+    while True:
 
-    #     # start Recording
-    #     print ("recording...")
+        # start Recording
+        print ("recording...")
 
-    #     audio = pyaudio.PyAudio()
-    #     stream = audio.open(format=FORMAT, channels=CHANNELS,
-    #                 rate=RATE, input=True,
-    #                 frames_per_buffer=CHUNK)
+        audio = pyaudio.PyAudio()
+        stream = audio.open(format=FORMAT, channels=CHANNELS,
+                    rate=RATE, input=True,
+                    frames_per_buffer=CHUNK)
 
-    #     frames = []
-    #     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-    #         data = stream.read(CHUNK)
-    #         frames.append(data)
-    #     print("finished recording")
+        frames = []
+        for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+            data = stream.read(CHUNK)
+            frames.append(data)
+        print("finished recording")
 
-    #     # stop Recording
-    #     stream.stop_stream()
-    #     stream.close()
-    #     audio.terminate()
+        # stop Recording
+        stream.stop_stream()
+        stream.close()
+        audio.terminate()
 
-    #     waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
-    #     waveFile.setnchannels(CHANNELS)
-    #     waveFile.setsampwidth(audio.get_sample_size(FORMAT))
-    #     waveFile.setframerate(RATE)
-    #     waveFile.writeframes(b''.join(frames))
-    #     waveFile.close()
+        waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+        waveFile.setnchannels(CHANNELS)
+        waveFile.setsampwidth(audio.get_sample_size(FORMAT))
+        waveFile.setframerate(RATE)
+        waveFile.writeframes(b''.join(frames))
+        waveFile.close()
 
-    #     # Read input file
-    #     sampling_freq, audio = wavfile.read(input_file_audio)
-
-    #     # Extract MFCC features
-    #     mfcc_features = mfcc(audio, sampling_freq)
-
-    #     # Define variables
-    #     max_score = [ float('-inf') ]
-    #     output_label = [ float('-inf') ]
-
-    #     # Iterate through all HMM models and pick 
-    #     # the one with the highest score
-    #     for item in hmm_models:
-    #         hmm_model, label = item
-    #         score = hmm_model.get_score(mfcc_features)
-    #         # print ('{}: {}'.format(label, score))
-
-    #         if score > max_score:
-    #             max_score = score
-    #             output_label = label
-
-
-
-    #     output = output_label.split()
-    #     output_label = output[0].split('\\')[1]
-    #     print ("Predicted:", output_label, '\n' )
-
-    #     if ( output_label == 'down' ):
-    #         pyautogui.press("d")
-    #     if ( output_label == 'left' ):
-    #         pyautogui.press("l")
-    #     if ( output_label == 'right' ):
-    #         pyautogui.press("r")
-    #     if ( output_label == 'spin' ):
-    #         pyautogui.press("s")
-    #     if ( output_label == 'default' ):
-    #         pyautogui.press("y")
-
-        
-
-
-
-
-    # Classify input data
-    for input_file in input_files_audio:
         # Read input file
-        sampling_freq, audio = wavfile.read(input_file)
+        sampling_freq, audio = wavfile.read(input_file_audio)
 
         # Extract MFCC features
         mfcc_features = mfcc(audio, sampling_freq)
@@ -200,22 +155,18 @@ if __name__=='__main__':
         # the one with the highest score
         for item in hmm_models:
             hmm_model, label = item
-            # print( label )
             score = hmm_model.get_score(mfcc_features)
             # print ('{}: {}'.format(label, score))
 
             if score > max_score:
                 max_score = score
                 output_label = label
-    
 
-        # Print the output
-        # print ("\nTrue:", input_file[input_file.find('/')+1:input_file.rfind('/')])
+
 
         output = output_label.split()
         output_label = output[0].split('\\')[1]
-        print ("Predicted:", output_label )
-
+        print ("Predicted:", output_label, '\n' )
 
         if ( output_label == 'down' ):
             pyautogui.press("d")
@@ -227,6 +178,55 @@ if __name__=='__main__':
             pyautogui.press("s")
         if ( output_label == 'default' ):
             pyautogui.press("y")
+
+        
+
+
+
+
+    # # Classify input data
+    # for input_file in input_files_audio:
+    #     # Read input file
+    #     sampling_freq, audio = wavfile.read(input_file)
+
+    #     # Extract MFCC features
+    #     mfcc_features = mfcc(audio, sampling_freq)
+
+    #     # Define variables
+    #     max_score = [ float('-inf') ]
+    #     output_label = [ float('-inf') ]
+
+    #     # Iterate through all HMM models and pick 
+    #     # the one with the highest score
+    #     for item in hmm_models:
+    #         hmm_model, label = item
+    #         # print( label )
+    #         score = hmm_model.get_score(mfcc_features)
+    #         # print ('{}: {}'.format(label, score))
+
+    #         if score > max_score:
+    #             max_score = score
+    #             output_label = label
+    
+
+    #     # Print the output
+    #     # print ("\nTrue:", input_file[input_file.find('/')+1:input_file.rfind('/')])
+
+    #     output = output_label.split()
+    #     output_label = output[0].split('\\')[1]
+    #     print ("Predicted:", output_label )
+
+
+    #     if ( output_label == 'down' ):
+    #         pyautogui.press("d")
+    #     if ( output_label == 'left' ):
+    #         pyautogui.press("l")
+    #     if ( output_label == 'right' ):
+    #         pyautogui.press("r")
+    #     if ( output_label == 'spin' ):
+    #         pyautogui.press("s")
+    #     if ( output_label == 'default' ):
+    #         pyautogui.press("y")
         
 
 
